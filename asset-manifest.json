@@ -1,0 +1,10 @@
+{
+  "files": {
+    "main.js": "/WhatsAppChat/static/js/main.9c929be8.js",
+    "index.html": "/WhatsAppChat/index.html",
+    "main.9c929be8.js.map": "/WhatsAppChat/static/js/main.9c929be8.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.9c929be8.js"
+  ]
+}
