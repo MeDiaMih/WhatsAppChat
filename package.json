@@ -28,7 +28,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -36,6 +38,7 @@
       "react-app/jest"
     ]
   },
+  "homepage": "https://mediamih.github.io/WhatsAppChat",
   "browserslist": {
     "production": [
       ">0.2%",
@@ -58,6 +61,7 @@
     "eslint-plugin-mobx": "^0.0.13",
     "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-react": "^7.37.4",
+    "gh-pages": "^6.3.0",
     "globals": "^15.15.0",
     "prettier": "^3.5.1",
     "typescript-eslint": "^8.24.0"
