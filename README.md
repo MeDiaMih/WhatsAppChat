@@ -1,46 +1,97 @@
-# Getting Started with Create React App
+# Инструкция по локальному запуску проекта "WhatsApp Chat"
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 1. Установка окружения
 
-## Available Scripts
+Перед началом работы убедитесь, что у вас установлены:
 
-In the project directory, you can run:
+- **Node.js** (версия 16.x или выше)
+- **npm** (версия 8.x или выше)
 
-### `npm start`
+Проверьте версии командой:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```sh
+node -v
+npm -v
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 2. Клонирование репозитория
 
-### `npm test`
+Склонируйте проект на ваш локальный компьютер:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```sh
+git clone https://github.com/MeDiaMih/WhatsAppChat.git
+```
 
-### `npm run build`
+Перейдите в папку проекта:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```sh
+cd WhatsAppChat
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 3. Установка зависимостей
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Установите все необходимые пакеты:
 
-### `npm run eject`
+```sh
+npm install
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## 4. Запуск проекта
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Для запуска используйте команду:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```sh
+npm start
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Проект запустится, и вы сможете открыть его в браузере по адресу:
 
-## Learn More
+```
+http://localhost:3000
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 5. Авторизация
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+При первом запуске вам необходимо ввести учетные данные:
+
+- **idInstance**
+- **apiTokenInstance**
+
+Эти данные вводятся пользователем вручную при авторизации и сохраняются в cookies.
+
+## 6. Используемые технологии
+
+- React 19
+- MobX для управления состоянием
+- Axios для работы с API
+- Styled-components для стилизации
+
+## 7. API и взаимодействие с WhatsApp
+
+Проект использует сервис **Green API** для отправки и получения сообщений WhatsApp.
+Основные API-запросы расположены в файле:
+
+```
+src/api/greenApi.ts
+```
+
+## 8. Сборка проекта
+
+Для создания production-сборки выполните команду:
+
+```sh
+npm run build
+```
+
+Готовые файлы появятся в папке `build/`.
+
+## 9. Дополнительная информация
+
+Если возникли ошибки при запуске, проверьте:
+
+- Соответствие версии Node.js и npm требованиям проекта.
+- Корректность установленных зависимостей (`npm install` должен пройти без ошибок).
+- Доступность Green API (при вводе неверных учетных данных может возникнуть ошибка авторизации).
+
+Если у вас остались вопросы, свяжитесь со мной https://t.me/mediamih.
+
