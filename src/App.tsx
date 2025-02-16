@@ -1,26 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { FC } from 'react';
+import GlobalStyle from './styles/GlobalStyles';
+import Chat from './components/Chat';
+import { observer } from 'mobx-react-lite';
+import Auth from './components/Auth';
+import Loader from './components/Loader';
+import { authStore } from './stores/AuthStore';
 
-function App() {
+const App: FC = observer(() => {
+  const { isAuthenticated, loading } = authStore;
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <GlobalStyle />
+      {isAuthenticated ? <Chat /> : <Auth />}
+    </>
   );
-}
+});
 
 export default App;
