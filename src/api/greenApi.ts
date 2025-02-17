@@ -11,7 +11,7 @@ export const sendMessageApi = async (
 ): Promise<void> => {
   try {
     const formattedPhoneNumber = formatPhoneNumber(recipientPhoneNumber);
-
+    console.log(idInstance);
     const response = await axios.post(
       `${BASE_URL}/waInstance${idInstance}/sendMessage/${apiTokenInstance}`,
       {
@@ -34,7 +34,7 @@ export const sendMessageApi = async (
 export const receiveMessageApi = async (
   idInstance: string,
   apiTokenInstance: string,
-): Promise<string> => {
+): Promise<{ id: string; text: string } | null> => {
   try {
     const response = await axios.get(
       `${BASE_URL}/waInstance${idInstance}/ReceiveNotification/${apiTokenInstance}`,
@@ -42,6 +42,7 @@ export const receiveMessageApi = async (
 
     if (response.data && response.data.body) {
       const { typeWebhook, messageData } = response.data.body;
+      const receiptId = response.data.receiptId;
 
       if (
         typeWebhook === 'incomingMessageReceived' &&
@@ -50,16 +51,14 @@ export const receiveMessageApi = async (
       ) {
         const textMessage = messageData.textMessageData.textMessage;
 
-        const receiptId = response.data.receiptId;
-
         await axios.delete(
           `${BASE_URL}/waInstance${idInstance}/DeleteNotification/${apiTokenInstance}/${receiptId}`,
         );
 
-        return textMessage;
+        return { id: receiptId, text: textMessage };
       }
     }
-    return '';
+    return null;
   } catch (error) {
     console.error('Ошибка при получении сообщения:', error);
     throw error;

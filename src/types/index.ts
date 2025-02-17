@@ -1,4 +1,5 @@
 export interface Message {
+  id: string;
   text: string;
   isUser: boolean;
 }
@@ -24,6 +25,8 @@ export interface ChatStoreState {
   setRecipientPhoneNumber: (phoneNumber: string) => void;
   addChat: (phoneNumber: string) => void;
   removeChat: (phoneNumber: string) => void;
+  updateCredentials: (idInstance: string, apiTokenInstance: string) => void;
+  clearAllData: () => void;
 }
 
 export interface AuthStoreState {

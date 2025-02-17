@@ -27,6 +27,8 @@ class ChatStore implements ChatStoreState {
       setRecipientPhoneNumber: action,
       addChat: action,
       removeChat: action,
+      updateCredentials: action,
+      clearAllData: action,
     });
     const { idInstance, apiTokenInstance } = authStore;
 
@@ -36,6 +38,22 @@ class ChatStore implements ChatStoreState {
     this.loadChatList();
     this.loadMessages();
   }
+
+  // Обновляет учетные данные при смене аккаунта
+  updateCredentials = () => {
+    const { idInstance, apiTokenInstance } = authStore;
+    this.idInstance = idInstance;
+    this.apiTokenInstance = apiTokenInstance;
+  };
+
+  // Очищает все данные о чатах и сообщениях
+  clearAllData = () => {
+    this.messages = [];
+    this.recipientPhoneNumber = '';
+    this.chatList = [];
+    this.saveRecipientPhoneNumber('');
+    this.saveChatList();
+  };
 
   // Загружает список чатов из локального хранилища
   loadChatList = () => {
@@ -60,7 +78,7 @@ class ChatStore implements ChatStoreState {
     this.chatList = this.chatList.filter((chat) => chat !== phoneNumber);
     this.saveChatList();
 
-    clearMessagesInStorage(phoneNumber);
+    clearMessagesInStorage(this.idInstance, this.apiTokenInstance, phoneNumber);
 
     if (this.recipientPhoneNumber === phoneNumber) {
       if (this.chatList.length > 0) {
@@ -94,7 +112,11 @@ class ChatStore implements ChatStoreState {
   // Загружает сообщения для текущего чата
   loadMessages = () => {
     if (this.recipientPhoneNumber) {
-      this.messages = loadMessagesFromStorage(this.recipientPhoneNumber);
+      this.messages = loadMessagesFromStorage(
+        this.idInstance,
+        this.apiTokenInstance,
+        this.recipientPhoneNumber,
+      );
     } else {
       this.messages = [];
     }
@@ -105,19 +127,9 @@ class ChatStore implements ChatStoreState {
     this.messages = [];
   };
 
-  // Очищает сообщения, если номер совпадает с активным чатом
-  clearMessagesForNumber = (phoneNumber: string) => {
-    if (this.recipientPhoneNumber === phoneNumber) {
-      this.clearMessages();
-    }
-  };
-
   // Устанавливает нового собеседника, загружает его сообщения и добавляет в список чатов
   setRecipientPhoneNumber = (phoneNumber: string) => {
     if (this.recipientPhoneNumber !== phoneNumber) {
-      if (this.recipientPhoneNumber) {
-        this.clearMessagesForNumber(this.recipientPhoneNumber);
-      }
       this.recipientPhoneNumber = phoneNumber;
       this.saveRecipientPhoneNumber(phoneNumber);
       this.loadMessages();
@@ -127,9 +139,17 @@ class ChatStore implements ChatStoreState {
 
   // Отправляет сообщение и сохраняет его в локальном хранилище
   sendMessage = async (text: string) => {
+    if (!text.trim()) return;
+
+    const messageId = Date.now().toString();
     try {
-      this.messages.push({ text, isUser: true });
-      saveMessagesToStorage(this.recipientPhoneNumber, this.messages);
+      this.messages.push({ id: messageId, text, isUser: true });
+      saveMessagesToStorage(
+        this.idInstance,
+        this.apiTokenInstance,
+        this.recipientPhoneNumber,
+        this.messages,
+      );
       await sendMessageApi(
         this.idInstance,
         this.apiTokenInstance,
@@ -148,9 +168,23 @@ class ChatStore implements ChatStoreState {
         this.idInstance,
         this.apiTokenInstance,
       );
-      if (message) {
-        this.messages.push({ text: message, isUser: false });
-        saveMessagesToStorage(this.recipientPhoneNumber, this.messages);
+      if (message && message.text) {
+        const messageId = message.id;
+        const isDuplicate = this.messages.some((msg) => msg.id === messageId);
+
+        if (!isDuplicate) {
+          this.messages.push({
+            id: messageId,
+            text: message.text,
+            isUser: false,
+          });
+          saveMessagesToStorage(
+            this.idInstance,
+            this.apiTokenInstance,
+            this.recipientPhoneNumber,
+            this.messages,
+          );
+        }
       }
     } catch (error) {
       console.error('Ошибка при получении сообщения:', error);

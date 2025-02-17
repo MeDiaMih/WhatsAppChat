@@ -1,29 +1,46 @@
 import { Message } from '../types';
 
 // Генерирует ключ для хранения сообщений по номеру телефона
-const getMessageStorageKey = (phoneNumber: string) =>
-  `chatMessages_${phoneNumber}`;
+const getMessageStorageKey = (
+  idInstance: string,
+  apiTokenInstance: string,
+  phoneNumber: string,
+) => `chatMessages_${idInstance}_${apiTokenInstance}_${phoneNumber}`;
 
 // Загружает сообщения из хранилища для указанного номера телефона
-export const loadMessagesFromStorage = (phoneNumber: string): Message[] => {
-  const savedMessages = localStorage.getItem(getMessageStorageKey(phoneNumber));
+export const loadMessagesFromStorage = (
+  idInstance: string,
+  apiTokenInstance: string,
+  phoneNumber: string,
+): Message[] => {
+  const savedMessages = localStorage.getItem(
+    getMessageStorageKey(idInstance, apiTokenInstance, phoneNumber),
+  );
   return savedMessages ? (JSON.parse(savedMessages) as Message[]) : [];
 };
 
 // Сохраняет сообщения в хранилище для указанного номера телефона
 export const saveMessagesToStorage = (
+  idInstance: string,
+  apiTokenInstance: string,
   phoneNumber: string,
   messages: Message[],
 ) => {
   localStorage.setItem(
-    getMessageStorageKey(phoneNumber),
+    getMessageStorageKey(idInstance, apiTokenInstance, phoneNumber),
     JSON.stringify(messages),
   );
 };
 
 // Очищает сообщения из хранилища для указанного номера телефона
-export const clearMessagesInStorage = (phoneNumber: string): void => {
-  localStorage.removeItem(getMessageStorageKey(phoneNumber));
+export const clearMessagesInStorage = (
+  idInstance: string,
+  apiTokenInstance: string,
+  phoneNumber: string,
+): void => {
+  localStorage.removeItem(
+    getMessageStorageKey(idInstance, apiTokenInstance, phoneNumber),
+  );
 };
 
 // Загружает список чатов из хранилища

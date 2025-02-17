@@ -3,6 +3,7 @@ import { clearCredentials, loadCredentials, saveCredentials } from './Cookie';
 import { AuthStoreState } from '../types';
 import { receiveMessageApi } from '../api/greenApi';
 import { validateCredentials } from '../utils/validateCredentials';
+import { chatStore } from './ChatStore';
 
 class AuthStore implements AuthStoreState {
   idInstance: string = '';
@@ -57,6 +58,9 @@ class AuthStore implements AuthStoreState {
       this.idInstance = idInstance;
       this.apiTokenInstance = apiTokenInstance;
       saveCredentials(idInstance, apiTokenInstance);
+
+      chatStore.updateCredentials();
+      chatStore.clearAllData();
     } catch (error) {
       this.error = 'Некорректные данные авторизации';
       throw error;
@@ -72,6 +76,8 @@ class AuthStore implements AuthStoreState {
     clearCredentials();
     this.idInstance = '';
     this.apiTokenInstance = '';
+
+    chatStore.clearAllData();
   };
 }
 
